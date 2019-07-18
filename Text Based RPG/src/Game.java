@@ -14,7 +14,6 @@ public class Game {
     public Game() {
 	char selection = 0;
 	boolean playerCreated = false;
-	lvl = new Level();
 	System.out.println("It was a a dark an eery night....");
 	do {
 	    selection = menu();
@@ -33,6 +32,7 @@ public class Game {
 		    System.out.println(player.taunt());
 		} else
 		    System.out.println("Something went wrong, try again.");
+		createBoard(); // ask the player what size board to play on
 		break;
 
 	    case 'V':
@@ -41,7 +41,10 @@ public class Game {
 		else
 		    System.out.println("Create a character first.");
 		break;
-
+	    case '!':
+		lvl.printBoard();
+		printBoardStats();
+		break;
 	    case 'X':
 		System.out.printf("\n%31s\n%40s", "Bye!", "Thanks for playing.");
 		break;
@@ -54,11 +57,48 @@ public class Game {
 	} while (selection != 'X');
     }
 
+    private void createBoard() {
+	int width = 0, height = 0;
+
+	System.out.println("\nEnter the width of the board: ");
+	width = sc.nextInt();
+	sc.nextLine();
+	System.out.println("\nEnter the height of the board: ");
+	height = sc.nextInt();
+	sc.nextLine();
+	lvl = new Level(width, height);
+
+    }
+
+    private void printBoardStats() {
+	int sCount = 0, bCount = 0, nCount = 0, check;
+
+	for (int y = 0; y < lvl.getHeight(); y++) {
+	    for (int x = 0; x < lvl.getWidth(); x++) {
+		check = lvl.position(y, x);
+		if (check == 0)
+		    nCount++;
+		else if (check == 1)
+		    sCount++;
+		else if (check == 2)
+		    bCount++;
+	    }
+	}
+
+	System.out.printf("\n%-30s%10s %10s", "Small monsters on board", ":", sCount);
+	System.out.printf("\n%-30s%10s %10s", "Big monsters on board", ":", bCount);
+	System.out.printf("\n%-30s%10s %10s", "Black spaces on board", ":", nCount);
+
+    }
+
     private void startGame() {
 	String decision, monster;
+
 	do {
-	    System.out.println("GO which way? 'X' to exit:");
+	    System.out.println("GO which way? 'D' to display location, 'X' to exit:\n");
 	    decision = sc.nextLine();
+	    if (decision.toUpperCase().charAt(0) == 'D')
+		System.out.printf("%s's location is %d, %d\n", player.getName(), player.getX(), player.getY());
 
 	    // first if statement checks the input was valid
 	    if (validDirection(decision.toUpperCase())) {
@@ -67,7 +107,7 @@ public class Game {
 		player.move(decision, lvl);
 
 		// if the input is not 'X' tell the player what is at the level position
-		if (decision.toUpperCase().charAt(0) != 'X') {
+		if (decision.toUpperCase().charAt(0) != 'X' && decision.toUpperCase().charAt(0) != 'D') {
 		    switch (lvl.position(player.getX(), player.getY())) {
 		    case 0:
 			System.out.println("You have walked " + decision + " but there is nothing here...");
@@ -89,12 +129,12 @@ public class Game {
 	    } else
 		System.out.println("Error, Enter North, South, East, West or X");
 
-	} while (decision.toUpperCase().charAt(0) != 'X');
+	} while (decision.toUpperCase().charAt(0) != 'X' && !player.isDead);
     }
 
     private boolean validDirection(String direction) {
 	if (direction.equals("NORTH") || direction.equals("SOUTH") || direction.equals("EAST")
-		|| direction.equals("WEST") || direction.charAt(0) == 'X')
+		|| direction.equals("WEST") || direction.charAt(0) == 'X' || direction.charAt(0) == 'D')
 	    return true;
 	else
 	    return false;
@@ -106,47 +146,42 @@ public class Game {
 
 	// VERY MUCH A WORK IN PROGRESS! FIRST TIME WORKING OUT A RANDOM HIT CHANCE
 	// BATTLE
+	Attack attack;
 	int action = 0;
-	boolean playerDead = false;
-	boolean monsterDead = false;
+	GameObject monster = null;
 
 	switch (i) {
 	case 1:
-	    SmallMonster sm = new SmallMonster(name, ID.SmallMonster);
-	    do {
-		if (rand.nextInt(sm.hitChance) < sm.hitChance) {
-		    int damage = sm.damage *= (sm.damage - player.defence);
-		    if (damage < 0)
-			damage = 0;
-		    System.out.println(sm.getName() + " attacks for " + damage);
-		    player.HP -= damage;
-		    System.out.println(player.name + " HP = " + player.HP);
-		}
-		System.out.println("What do you want to do?\n " + "1 - Attack!\n" + "3 - Run!");
-		action = sc.nextInt();
-		sc.nextLine();
-		if (action == 1) {
-		    if (rand.nextInt(player.hitChance) < player.hitChance) {
-			int damage = player.damage *= (player.damage - sm.defence);
-			System.out.println(player.getName() + " attacks for " + damage);
-			sm.HP -= damage;
-			System.out.println(sm.name + " HP = " + sm.HP);
-		    }
-		}
-		if (player.HP <= 0) {
-		    playerDead = true;
-		    System.out.println(player.getName() + " is Dead.");
-		} else if (sm.HP <= 0) {
-		    monsterDead = true;
-		    System.out.println(sm.getName() + " is Dead.");
-		}
-
-	    } while (action != 3 && !playerDead && !monsterDead);
+	    monster = new SmallMonster(name, ID.SmallMonster);
 	    break;
 	case 2:
+	    monster = new BigMonster(name, ID.BigMonster);
 	    break;
 	default:
 	    break;
+	}
+	if (monster != null) {
+	    do {
+
+		attack = new Attack(monster, player);
+
+		System.out.println("What do you want to do?\n" + "1 - Attack\n" + "3 - Run!\n");
+		action = sc.nextInt();
+		sc.nextLine();
+		if (action == 1) {
+		    attack = new Attack(player, monster);
+		}
+
+		if (player.HP <= 0) {
+		    player.isDead = true;
+		    System.out.println(player.getName() + " is Dead.\n\nGAME OVER!");
+		} else if (monster.HP <= 0) {
+		    monster.isDead = true;
+		    System.out.println(monster.getName() + " is Dead.");
+		    lvl.clearMonster(player.getX(), player.getY());
+		}
+
+	    } while (action != 3 && !player.isDead && !monster.isDead);
 	}
     }
 
@@ -177,6 +212,7 @@ public class Game {
 	System.out.printf("\n%15s%15s%-20s\n\n", "S", " ", "Start Game");
 	System.out.printf("%15s%15s%-20s\n\n", "C", " ", "Create Character");
 	System.out.printf("%15s%15s%-20s\n\n", "V", " ", "View Character");
+	System.out.printf("%15s%15s%-20s\n\n", "!", " ", "View Board Stats");
 	System.out.printf("%15s%15s%-20s\n\n", "X", " ", "Quit Game");
 	for (int i = 0; i < 50; i++)
 	    System.out.print("-");

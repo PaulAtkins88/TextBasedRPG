@@ -7,6 +7,7 @@ public class Mage extends Player {
 	this.MP = 200;
 	this.damage = 75;
 	this.defence = 25;
+	this.hitChance = 25;
 	this.setTaunt("Dormanu, I've come to bargin.");
     }
 

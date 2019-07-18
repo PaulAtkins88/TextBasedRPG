@@ -8,7 +8,10 @@ public class GameObject {
     protected ID id;
     protected int hitChance;
     private String taunt;
+    protected boolean isDead = false;
     
+
+
     public GameObject(String name, ID id) {
 	this.name = name;
 	this.id = id;

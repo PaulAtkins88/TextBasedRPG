@@ -6,7 +6,7 @@ public class SmallMonster extends GameObject {
 	this.HP = 10;
 	this.damage = 20;
 	this.defence = 25;
-	this.hitChance = 10;
+	this.hitChance = 15;
     }
 
 }
