@@ -103,26 +103,45 @@ public class Game {
     private void battle(int i, String name) {
 	// what type of monster to create based on what is passed to the method
 	// 1 for small monster, 2 for big monster
-	
-	// VERY MUCH A WORK IN PROGRESS! FIRST TIME WORKING OUT A RANDOM HIT CHANCE BATTLE
+
+	// VERY MUCH A WORK IN PROGRESS! FIRST TIME WORKING OUT A RANDOM HIT CHANCE
+	// BATTLE
 	int action = 0;
+	boolean playerDead = false;
+	boolean monsterDead = false;
 
 	switch (i) {
 	case 1:
 	    SmallMonster sm = new SmallMonster(name, ID.SmallMonster);
 	    do {
 		if (rand.nextInt(sm.hitChance) < sm.hitChance) {
-		    int damage = (sm.damage - player.defence);
+		    int damage = sm.damage *= (sm.damage - player.defence);
+		    if (damage < 0)
+			damage = 0;
 		    System.out.println(sm.getName() + " attacks for " + damage);
 		    player.HP -= damage;
-		    System.out.println(player.name + " HP = " + player.HP);		    
+		    System.out.println(player.name + " HP = " + player.HP);
 		}
-		System.out.println("What do you want to do?\n "
-			+ "1 - Attack!\n"
-			+ "3 - Run!");
+		System.out.println("What do you want to do?\n " + "1 - Attack!\n" + "3 - Run!");
 		action = sc.nextInt();
 		sc.nextLine();
-	    } while (action != 3);
+		if (action == 1) {
+		    if (rand.nextInt(player.hitChance) < player.hitChance) {
+			int damage = player.damage *= (player.damage - sm.defence);
+			System.out.println(player.getName() + " attacks for " + damage);
+			sm.HP -= damage;
+			System.out.println(sm.name + " HP = " + sm.HP);
+		    }
+		}
+		if (player.HP <= 0) {
+		    playerDead = true;
+		    System.out.println(player.getName() + " is Dead.");
+		} else if (sm.HP <= 0) {
+		    monsterDead = true;
+		    System.out.println(sm.getName() + " is Dead.");
+		}
+
+	    } while (action != 3 && !playerDead && !monsterDead);
 	    break;
 	case 2:
 	    break;
