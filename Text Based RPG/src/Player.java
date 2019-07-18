@@ -6,6 +6,7 @@ public class Player extends GameObject {
 	super(name, id);	
 	this.x = 0;
 	this.y = 0;
+	this.hitChance = 5;
     }
     
     public boolean move(String direction, Level lvl) {
@@ -19,7 +20,7 @@ public class Player extends GameObject {
 	    }
 	    break;
 	case "SOUTH":
-	    if (this.y < lvl.getBoard().length) {
+	    if (this.y < lvl.getBoard().length - 1) {
 		this.y++;
 		System.out.println("new player position: " + this.x + "," + this.y);
 	    } else {
@@ -27,7 +28,7 @@ public class Player extends GameObject {
 	    }
 	    break;
 	case "EAST":
-	    if (this.x < lvl.getBoard().length) {
+	    if (this.x < lvl.getBoard().length - 1) {
 		this.x++;
 		System.out.println("new player position: " + this.x + "," + this.y);
 	    } else {
@@ -62,7 +63,7 @@ public class Player extends GameObject {
 	System.out.printf("%20s %-30s\n", "Type:",this.type); // TODO: prints null? needs fixing
 	System.out.printf("%20s %-30s\n", "HP:", this.HP);
 	System.out.printf("%20s %-30s\n", "MP:", this.MP);
-	System.out.printf("%20s %-30s\n", "Attack:", this.attack);
+	System.out.printf("%20s %-30s\n", "Attack:", this.damage);
 	System.out.printf("%20s %-30s\n", "Defence:", this.defence);
 	for (int i = 0; i < 50; i++)
 	    System.out.print("-");

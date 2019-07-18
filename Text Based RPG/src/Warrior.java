@@ -5,7 +5,7 @@ public class Warrior extends Player {
 	super(name, id, type);
 	this.HP = 200;
 	this.MP = 0;
-	this.attack = 50;
+	this.damage = 50;
 	this.defence = 50;
 	this.setTaunt("I am the strongest!");
     }

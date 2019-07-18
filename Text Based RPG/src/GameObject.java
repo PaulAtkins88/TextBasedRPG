@@ -3,9 +3,10 @@ public class GameObject {
     protected String name;
     protected int HP;
     protected int MP;
-    protected int attack;
+    protected int damage;
     protected int defence;
     protected ID id;
+    protected int hitChance;
     private String taunt;
     
     public GameObject(String name, ID id) {
@@ -18,7 +19,7 @@ public class GameObject {
     }
     
     public int attack() {
-	return this.attack;
+	return this.damage;
     }
     
     public int defend() {
