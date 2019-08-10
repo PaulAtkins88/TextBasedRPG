@@ -13,10 +13,10 @@ public class Attack {
 	int hitChance = this.attacker.hitChance;
 	int defense = this.defender.defence;
 	System.out.println(defender.getName() + " HP = " + defender.getHP() + "\n");
-	if (rand.nextInt(100) < ((hitChance + defense) - hitChance)) {
-
-	    this.defender.HP -= this.attacker.damage;
-	    System.out.println(this.defender.getName() + " was hit for " + this.attacker.damage);
+	if (rand.nextInt(hitChance) > defense) {
+	    int damage = rand.nextInt(this.attacker.damage);
+	    this.defender.HP -= damage;
+	    System.out.println(this.defender.getName() + " was hit for " + damage);
 
 	}
     }
