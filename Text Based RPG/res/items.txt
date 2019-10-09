@@ -1,0 +1,2 @@
+Armor WoodenShield 10 2 5
+Weapon Sword 20 4 10

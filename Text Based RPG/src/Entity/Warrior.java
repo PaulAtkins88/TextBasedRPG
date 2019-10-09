@@ -1,3 +1,5 @@
+package Entity;
+import Main.ID;
 
 public class Warrior extends Player {
 

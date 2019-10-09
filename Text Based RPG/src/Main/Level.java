@@ -1,3 +1,4 @@
+package Main;
 import java.util.Random;
 
 public class Level {
@@ -19,6 +20,7 @@ public class Level {
 		board[y][x] = rand.nextInt(3);
 	    }
 	}	
+	board[1][1] = 9; // set a shop
     }
 
     public int[][] getBoard() {

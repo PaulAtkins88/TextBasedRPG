@@ -1,3 +1,5 @@
+package Entity;
+import Main.ID;
 
 public class GameObject {
     protected String name;
@@ -8,7 +10,7 @@ public class GameObject {
     protected ID id;
     protected int hitChance;
     private String taunt;
-    protected boolean isDead = false;
+    public boolean isDead = false;
     
 
 

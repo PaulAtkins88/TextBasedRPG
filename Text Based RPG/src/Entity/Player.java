@@ -1,3 +1,6 @@
+package Entity;
+import Main.ID;
+import Main.Level;
 
 public class Player extends GameObject {
     private String type;
@@ -6,6 +9,7 @@ public class Player extends GameObject {
 	super(name, id);	
 	this.x = 0;
 	this.y = 0;
+	this.type = type;
 	this.hitChance = 5;
     }
     

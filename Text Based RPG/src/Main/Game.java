@@ -1,5 +1,15 @@
+package Main;
 import java.util.Random;
 import java.util.Scanner;
+
+import Entity.Attack;
+import Entity.BigMonster;
+import Entity.GameObject;
+import Entity.Mage;
+import Entity.Player;
+import Entity.SmallMonster;
+import Entity.Warrior;
+import Shop.Shop;
 
 public class Game {
     Scanner sc = new Scanner(System.in);
@@ -10,10 +20,14 @@ public class Game {
 
     private final String[] SMALL_MONSTER = { "goblin", "ewok", "gremlin" };
     private final String[] BIG_MONSTER = { "Dragon", "Thanos", "Mr Squiggle" };
+    private static Shop shop = new Shop();
+    
+    public static final int WIDTH = 80, HEIGHT = 40;
 
     public Game() {
 	char selection = 0;
 	boolean playerCreated = false;
+	
 	System.out.println("It was a a dark an eery night....");
 	do {
 	    selection = menu();
@@ -122,6 +136,8 @@ public class Game {
 			System.out.println("You have walked " + decision + " and before you stands a " + monster);
 			battle(2, monster);
 			break;
+		    case 9:
+			shop.runShop(player);
 		    default:
 			System.out.println("Exiting to Main Menu");
 		    }
@@ -172,10 +188,10 @@ public class Game {
 		    attack = new Attack(player, monster);
 		}
 
-		if (player.HP <= 0) {
+		if (player.getHP() <= 0) {
 		    player.isDead = true;
 		    System.out.println(player.getName() + " is Dead.\n\nGAME OVER!");
-		} else if (monster.HP <= 0) {
+		} else if (monster.getHP() <= 0) {
 		    monster.isDead = true;
 		    System.out.println(monster.getName() + " is Dead.");
 		    lvl.clearMonster(player.getX(), player.getY());

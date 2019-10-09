@@ -1,3 +1,4 @@
+package Entity;
 import java.util.Random;
 
 public class Attack {
