@@ -61,7 +61,6 @@ public class Shop {
 	    } while (filein.hasNextLine());
 	    filein.close();
 	} catch (FileNotFoundException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
     }
@@ -69,8 +68,6 @@ public class Shop {
     public void runShop(Player player) {
 	String choice;
 	do {
-	    // Shop formatting debug.
-
 	    // Title
 	    printLine(Game.WIDTH);
 	    System.out.printf("%-20s%-15s%-10s%-15s%20s\n", "|", " ", "SHOP", " ", "|");
@@ -106,12 +103,32 @@ public class Shop {
 	    printLine(Game.WIDTH);
 
 	    // get choice
-	    
-
 	    System.out.println("Which item? X to exit to Shop");
 	    choice = sc.nextLine();
+	    if (validChoice(choice) && choice.toUpperCase().charAt(0) != 'X') {
+		// TODO: Purchasing works, needs a coin system now.
+		buy(player,choice);
+		System.out.println("Press enter to continue.");
+		sc.nextLine();
+	    }
 
 	} while (choice.toUpperCase().charAt(0) != 'X');
+    }
+
+    private void buy(Player player, String choice) {
+	Item tmp = items.get(Integer.parseInt(choice));
+	System.out.println("Purchasing - " + tmp.getName());
+	player.addItem(tmp);	
+    }
+
+    private boolean validChoice(String choice) {
+	if (choice.toUpperCase().charAt(0) == 'X') {
+	    return true;
+	} else if (Integer.parseInt(choice) < items.size()) {
+	    return true;
+	} else
+	    return false;
+	
     }
 
     private void debug() {

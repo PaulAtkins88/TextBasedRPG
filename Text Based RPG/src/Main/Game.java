@@ -34,6 +34,7 @@ public class Game {
 	    switch (selection) {
 	    case 'S':
 		if (playerCreated) {
+		    createBoard(); // ask the player what size board to play on
 		    startGame();
 		} else {
 		    System.out.println("Create a character first.");
@@ -45,8 +46,7 @@ public class Game {
 		if (playerCreated) {
 		    System.out.println(player.taunt());
 		} else
-		    System.out.println("Something went wrong, try again.");
-		createBoard(); // ask the player what size board to play on
+		    System.out.println("Something went wrong, try again.");		
 		break;
 
 	    case 'V':
