@@ -13,14 +13,12 @@ public class Shop {
 
     private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
     private int[][] stock;
-    private int[][] cost;
     private boolean debug = false;
     private int itemID;
     private Scanner sc = new Scanner(System.in);
 
     public Shop() {
 	stock = new int[10][1];
-	cost = new int[10][1];
 	try {
 	    loadItems();
 	    if (debug) {
@@ -45,14 +43,14 @@ public class Shop {
 		// splitItem[4] = cost
 
 		if (splitItem[0].equals("Weapon")) {
-		    items.put(itemID, new Weapon(splitItem[1], Integer.parseInt(splitItem[2])));
+		    items.put(itemID,
+			    new Weapon(splitItem[1], Integer.parseInt(splitItem[4]), Integer.parseInt(splitItem[2])));
 		    stock[itemID][0] = Integer.parseInt(splitItem[3]);
-		    cost[itemID][0] = Integer.parseInt(splitItem[4]);
 		    itemID++;
 		} else if (splitItem[0].equals("Armor")) {
-		    items.put(itemID, new Armor(splitItem[1], Integer.parseInt(splitItem[2])));
+		    items.put(itemID,
+			    new Armor(splitItem[1], Integer.parseInt(splitItem[4]), Integer.parseInt(splitItem[2])));
 		    stock[itemID][0] = Integer.parseInt(splitItem[3]);
-		    cost[itemID][0] = Integer.parseInt(splitItem[4]);
 		    itemID++;
 		} else {
 		    throw new ShopException("Data corrupt.");
@@ -84,7 +82,7 @@ public class Shop {
 	    for (int i = 0; i < itemID; i++) {
 		if (items.get(i) instanceof Weapon) {
 		    System.out.printf("%-5s%-15s%-25s%-10s%-10s%10s%5s\n", "|", i, items.get(i).getName(),
-			    ((Weapon) items.get(i)).getDamage(), stock[i][0], cost[i][0], "|");
+			    ((Weapon) items.get(i)).getDamage(), stock[i][0], items.get(i).getCost(), "|");
 		}
 	    }
 	    printLine(Game.WIDTH);
@@ -97,17 +95,17 @@ public class Shop {
 	    for (int i = 0; i < itemID; i++) {
 		if (items.get(i) instanceof Armor) {
 		    System.out.printf("%-5s%-15s%-25s%-10s%-10s%10s%5s\n", "|", i, items.get(i).getName(),
-			    ((Armor) items.get(i)).getDefence(), stock[i][0], cost[i][0], "|");
+			    ((Armor) items.get(i)).getDefence(), stock[i][0], items.get(i).getCost(), "|");
 		}
 	    }
 	    printLine(Game.WIDTH);
 
 	    // get choice
+	    System.out.println("You have " + player.getGold() + " gold available.");
 	    System.out.println("Which item? X to exit to Shop");
 	    choice = sc.nextLine();
 	    if (validChoice(choice) && choice.toUpperCase().charAt(0) != 'X') {
-		// TODO: Purchasing works, needs a coin system now.
-		buy(player,choice);
+		buy(player, choice);
 		System.out.println("Press enter to continue.");
 		sc.nextLine();
 	    }
@@ -117,8 +115,12 @@ public class Shop {
 
     private void buy(Player player, String choice) {
 	Item tmp = items.get(Integer.parseInt(choice));
-	System.out.println("Purchasing - " + tmp.getName());
-	player.addItem(tmp);	
+	if (player.getGold() >= tmp.getCost()) {
+	    player.setGold(player.getGold() - tmp.getCost());
+	    System.out.println("Purchasing - " + tmp.getName());
+	    player.addItem(tmp);
+	} else
+	    System.out.println("You do not have enough gold! go away.");
     }
 
     private boolean validChoice(String choice) {
@@ -128,13 +130,13 @@ public class Shop {
 	    return true;
 	} else
 	    return false;
-	
+
     }
 
     private void debug() {
 	for (int i = 0; i < items.size(); i++)
 	    System.out.println(items.get(i).getClass().getName() + ", " + items.get(i).getName() + ". in stock = "
-		    + stock[i][0] + ". Cost is = " + cost[i][0] + "\n");
+		    + stock[i][0] + ". Cost is = " + items.get(i).getCost() + "\n");
 
     }
 

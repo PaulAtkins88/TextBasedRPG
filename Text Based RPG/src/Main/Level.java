@@ -17,7 +17,7 @@ public class Level {
 	
 	for (int y = 1; y < this.height; y++) {
 	    for (int x = 1; x < this.width; x++) {
-		board[y][x] = rand.nextInt(3);
+		board[y][x] = rand.nextInt(9);
 	    }
 	}	
 	board[1][1] = 9; // set a shop

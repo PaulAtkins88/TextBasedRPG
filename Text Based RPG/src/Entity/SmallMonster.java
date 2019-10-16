@@ -1,4 +1,5 @@
 package Entity;
+
 import Main.ID;
 
 public class SmallMonster extends GameObject {
@@ -9,6 +10,7 @@ public class SmallMonster extends GameObject {
 	this.damage = 20;
 	this.defence = 10;
 	this.hitChance = 15;
+	this.reward = 15;
     }
 
 }

@@ -1,4 +1,5 @@
 package Entity;
+
 import java.util.ArrayList;
 
 import Main.ID;
@@ -10,17 +11,28 @@ import Shop.Weapon;
 public class Player extends GameObject {
     private String type;
     private ArrayList<Item> inventory;
-    private int x,y;
-    public Player(String name, ID id,String type) {
-	super(name, id);	
+    private int x, y;
+    private int gold;
+
+    public Player(String name, ID id, String type) {
+	super(name, id);
 	this.x = 0;
 	this.y = 0;
 	this.type = type;
 	this.hitChance = 5;
-	
+
+	this.gold = 0;
 	this.inventory = new ArrayList<Item>();
     }
     
+    public void setGold(int amount) {
+	this.gold = amount;
+    }
+    
+    public int getGold() {
+	return this.gold;
+    }
+
     public boolean move(String direction, Level lvl) {
 	switch (direction.toUpperCase()) {
 	case "NORTH":
@@ -60,13 +72,13 @@ public class Player extends GameObject {
     }
 
     public int getX() {
-        return x;
+	return x;
     }
 
     public int getY() {
-        return y;
+	return y;
     }
-    
+
     public void addItem(Item item) {
 	this.inventory.add(item);
 	if (item instanceof Armor) {
@@ -75,26 +87,41 @@ public class Player extends GameObject {
 	    this.damage += ((Weapon) item).getDamage();
 	}
     }
-    
+
     public ArrayList<Item> getItems() {
 	return inventory;
     }
-    
-    public void printDetails() {
-	System.out.println();
+
+    private void drawLine() {
 	for (int i = 0; i < 50; i++)
 	    System.out.print("-");
+    }
+
+    public void printDetails() {
+	System.out.println();
+	drawLine();
 	System.out.printf("\n%20s %-30s\n", "Name:", this.name);
-	System.out.printf("%20s %-30s\n", "Type:",this.type); // TODO: prints null? needs fixing
+	System.out.printf("%20s %-30s\n", "Type:", this.type);
 	System.out.printf("%20s %-30s\n", "HP:", this.HP);
 	System.out.printf("%20s %-30s\n", "MP:", this.MP);
 	System.out.printf("%20s %-30s\n", "Attack:", this.damage);
 	System.out.printf("%20s %-30s\n", "Defence:", this.defence);
-	for (int i = 0; i < 50; i++)
-	    System.out.print("-");
-	System.out.println("\nInventory");
-	for (Item items: inventory)
-	    System.out.println(items.getName());
+	drawLine();
+	System.out.println("\nInventory\n");
+	drawLine();
+	System.out.println("\nArmor");
+	System.out.printf("%-40s%-15s\n", "Name", "Defence Points");
+	for (Item items : inventory) {
+	    if (items instanceof Armor)
+		System.out.printf("%-40s%-15d\n", items.getName(), ((Armor) items).getDefence());
+	}
+	drawLine();
+	System.out.println("\nWeapons");
+	System.out.printf("%-40s%-15s\n", "Name", "Attack Points");
+	for (Item items : inventory) {
+	    if (items instanceof Weapon)
+		System.out.printf("%-40s%-15d\n", items.getName(), ((Weapon) items).getDamage());
+	}
     }
 
 }

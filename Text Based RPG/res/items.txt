@@ -1,2 +1,7 @@
-Armor WoodenShield 10 2 5
+Armor Wooden-Shield 10 2 5
+Armor Chainmail 50 1 25
+Armor Leather-Helmet 5 5 5
 Weapon Sword 20 4 10
+Weapon Axe 20 2 10
+Weapon Bow 20 8 10
+Weapon Wand 50 2 20

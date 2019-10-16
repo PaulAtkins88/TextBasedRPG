@@ -9,6 +9,7 @@ public class GameObject {
     protected int defence;
     protected ID id;
     protected int hitChance;
+    protected int reward;
     private String taunt;
     public boolean isDead = false;
     
@@ -37,6 +38,10 @@ public class GameObject {
     
     public int getMP() {
 	return this.MP;
+    }
+    
+    public int getReward() {
+	return this.reward;
     }
     
     public String taunt() {

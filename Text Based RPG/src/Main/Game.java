@@ -1,4 +1,5 @@
 package Main;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,16 +22,16 @@ public class Game {
     private final String[] SMALL_MONSTER = { "goblin", "ewok", "gremlin" };
     private final String[] BIG_MONSTER = { "Dragon", "Thanos", "Mr Squiggle" };
     private static Shop shop = new Shop();
-    
+
     public static final int WIDTH = 80, HEIGHT = 40;
 
     public Game() {
 	char selection = 0;
 	boolean playerCreated = false;
-	
+
 	System.out.println("It was a a dark an eery night....");
 	do {
-	    selection = menu();
+	    selection = menu().toUpperCase().charAt(0);
 	    switch (selection) {
 	    case 'S':
 		if (playerCreated) {
@@ -46,7 +47,7 @@ public class Game {
 		if (playerCreated) {
 		    System.out.println(player.taunt());
 		} else
-		    System.out.println("Something went wrong, try again.");		
+		    System.out.println("Something went wrong, try again.");
 		break;
 
 	    case 'V':
@@ -109,8 +110,15 @@ public class Game {
 	String decision, monster;
 
 	do {
-	    System.out.println("GO which way? 'D' to display location, 'X' to exit:\n");
-	    decision = sc.nextLine();
+	    do {
+		System.out.println("GO which way? 'D' to display location, 'X' to exit:\n");
+		decision = sc.nextLine();
+		if (decision.isEmpty()) {
+		    System.out.println("Choice cannot be empty, try again.");
+		    System.out.println("GO which way? 'D' to display location, 'X' to exit:\n");
+		    decision = sc.nextLine();
+		}
+	    } while (decision.isEmpty());
 	    if (decision.toUpperCase().charAt(0) == 'D')
 		System.out.printf("%s's location is %d, %d\n", player.getName(), player.getX(), player.getY());
 
@@ -194,6 +202,8 @@ public class Game {
 		} else if (monster.getHP() <= 0) {
 		    monster.isDead = true;
 		    System.out.println(monster.getName() + " is Dead.");
+		    System.out.println("You have been rewarded " + monster.getReward() + " gold.");
+		    player.setGold(monster.getReward());
 		    lvl.clearMonster(player.getX(), player.getY());
 		}
 
@@ -220,8 +230,8 @@ public class Game {
 	return true;
     }
 
-    private char menu() {
-	char selection = 0;
+    private String menu() {
+	String selection;
 	System.out.printf("\n\n%30s\n", "Menu");
 	for (int i = 0; i < 50; i++)
 	    System.out.print("-");
@@ -233,11 +243,19 @@ public class Game {
 	for (int i = 0; i < 50; i++)
 	    System.out.print("-");
 	System.out.printf("\n%30s:", "Enter choice");
-	selection = sc.nextLine().toUpperCase().charAt(0);
+	do {
+	    selection = sc.nextLine().toUpperCase();
+	    if (selection.isEmpty()) {
+		System.out.println("Selection cant be empty");
+		System.out.printf("\n%30s:", "Enter choice");
+		selection = sc.nextLine().toUpperCase();
+	    }
+	} while (selection.isEmpty());
 	return selection;
     }
 
     public static void main(String[] args) {
+	
 	new Game();
     }
 
